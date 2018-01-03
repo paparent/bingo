@@ -1,60 +1,92 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
+    <div class="current">
+      {{ currentCart }}
+    </div>
+
+    <ul class="board clearfix">
+      <li v-for="(card, c) in allCards" :key="c" :class="{draw: isCardDraw(card)}">
+       {{ renderCard(card) }}
+     </li>
     </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
+
+    <div>
+      Nombre de cartes restantes: {{ numCardsLeft }}
+    </div>
+    <div>
+      <button v-if="numCardsLeft" @click.stop.prevent="next">Suivante</button>
+    </div>
   </div>
 </template>
 
+<style>
+body {
+  text-align: center;
+}
+.current {
+  font-size: 16em;
+}
+.clearfix:after {
+   content: " ";
+   visibility: hidden;
+   display: block;
+   height: 0;
+   clear: both;
+}
+.board li:nth-child(15n+1) {
+  clear: left;
+}
+.board li {
+  list-style: none;
+  float: left;
+  margin: 10px;
+  width: 4%;
+}
+.draw {
+  color: red;
+}
+</style>
+
 <script>
+import _ from 'lodash';
+
+const numTotalCards = 75;
+const letters = 'BINGO';
+const allCards = _.times(numTotalCards, v => Number(v) + 1);
+const renderCard = card => `${letters[Math.floor((card - 1) / 15)]}${card}`;
+
 export default {
   name: 'app',
   data () {
+    const cards = _.shuffle(allCards);
+    const index = 0;
+    const drawCards = [cards[index]];
     return {
-      msg: 'Welcome to Your Vue.js App'
+      cards,
+      drawCards,
+      index,
+    };
+  },
+  computed: {
+    currentCart() {
+      return renderCard(this.cards[this.index]);
+    },
+    numCardsLeft() {
+      return numTotalCards - this.index - 1;
+    },
+    allCards() {
+      return allCards;
+    }
+  },
+  methods: {
+    renderCard,
+    next() {
+      this.index++;
+      this.drawCards.push(this.cards[this.index]);
+    },
+    isCardDraw(card) {
+      return _.includes(this.drawCards, card);
     }
   }
-}
+};
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}
-</style>

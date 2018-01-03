@@ -1,4 +1,4 @@
-# bingo
+# Bingo
 
 > A Vue.js project
 
