@@ -48,17 +48,19 @@ body {
 </style>
 
 <script>
-import _ from 'lodash';
+import includes from 'lodash/includes';
+import shuffle from 'lodash/shuffle';
+import times  from 'lodash/times';
 
 const numTotalCards = 75;
 const letters = 'BINGO';
-const allCards = _.times(numTotalCards, v => Number(v) + 1);
+const allCards = times(numTotalCards, v => Number(v) + 1);
 const renderCard = card => `${letters[Math.floor((card - 1) / 15)]}${card}`;
 
 export default {
   name: 'app',
   data () {
-    const cards = _.shuffle(allCards);
+    const cards = shuffle(allCards);
     const index = 0;
     const drawCards = [cards[index]];
     return {
@@ -85,7 +87,7 @@ export default {
       this.drawCards.push(this.cards[this.index]);
     },
     isCardDraw(card) {
-      return _.includes(this.drawCards, card);
+      return includes(this.drawCards, card);
     }
   }
 };
