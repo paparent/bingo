@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "express": "^4.16.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "vue": "^2.5.13"
   },
   "browserslist": [
